@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Lead, MainMode, SubModule } from '../../types';
 import { Tooltip } from './Tooltip';
@@ -18,8 +17,8 @@ const DashboardIcon = ({ type }: { type: string }) => {
     case 'RECORDS': return <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 7v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7M4 7c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2M4 7c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2" /></svg>;
     case 'SENT': return <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>;
     case 'COST': return <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 010 7h5a3.5 3.5 0 010 7H6" /></svg>;
-    case 'BLUEPRINT': return <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5", "M2 12l10 5 10-5" /></svg>;
-    case 'DISCOVERY': return <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>;
+    case 'BLUEPRINT': return <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>;
+    case 'DISCOVERY': return <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" cy1="21" x2="16.65" y2="16.65"/></svg>;
     case 'LEDGER': return <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5z" /></svg>;
     default: return null;
   }
@@ -57,7 +56,7 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({ leads, market, on
     { label: 'ACTIVE WORKFLOWS', status: activeWorkflows > 0 ? `${activeWorkflows} RUNNING` : 'IDLE', icon: 'WORKFLOWS', desc: "Ongoing automated agency tasks." },
     { label: 'SAVED PROSPECTS', status: `${leads.length} RECORDS`, icon: 'RECORDS', desc: "Total database volume." },
     { label: 'MESSAGES (24H)', status: `${outreachCount} SENT`, icon: 'SENT', desc: "Outreach activity." },
-    { label: 'OPERATING COST', status: `$${sessionCost.toFixed(2)}`, icon: 'COST', desc: "Current session expenses." },
+    { label: 'SESSION SPEND', status: `$${sessionCost.toFixed(2)}`, icon: 'COST', desc: "Current session expenses." },
   ];
 
   const actions = [
@@ -68,22 +67,32 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({ leads, market, on
 
   return (
     <div className="space-y-12 py-4 max-w-6xl mx-auto animate-in fade-in duration-700 relative pb-20">
-      <div className="absolute top-0 right-0 z-20">
-          <div className="flex items-center gap-3 px-6 py-3 rounded-full border-2 border-emerald-500/40 bg-emerald-950/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">BALANCE: ${balance.toFixed(2)}</span>
+      
+      {/* EMPIRE FUEL DISPLAY */}
+      <div className="absolute top-0 right-0 z-20 flex flex-col items-end gap-2">
+          <div onClick={() => onNavigate('ADMIN', 'USAGE_STATS')} className="flex items-center gap-4 px-6 py-4 rounded-[28px] border-2 border-emerald-500/40 bg-[#0b1021] shadow-2xl cursor-pointer hover:border-emerald-500 transition-all group">
+              <div className="text-right">
+                  <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block mb-1">AGENCY_BALANCE</span>
+                  <span className="text-2xl font-black text-white italic tracking-tighter leading-none group-hover:text-emerald-400 transition-colors">${balance.toFixed(2)}</span>
+              </div>
+              <div className="h-10 w-px bg-slate-800"></div>
+              <div className="w-10 h-10 rounded-2xl bg-emerald-600/10 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                  ⚡
+              </div>
           </div>
+          <span className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.4em] mr-2">EMPIRE_TIER_LOCKED // UNLIMITED_CAPACITY</span>
       </div>
 
       <div className="text-center relative py-6">
-        <div className="inline-flex items-center gap-3 px-4 py-2 bg-emerald-500/10 border-2 border-emerald-500/20 rounded-xl mb-6 shadow-lg">
+        <div className="inline-flex items-center gap-3 px-4 py-2 bg-emerald-600/10 border-2 border-emerald-500/20 rounded-xl mb-6 shadow-lg">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-          <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em]">Agency Systems Synchronized</span>
+          <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em]">Empire Systems Synchronized</span>
         </div>
         
         <h1 className="text-4xl font-black uppercase tracking-tighter text-white leading-none">
-          AGENCY <span className="text-emerald-500 italic opacity-90">OVERVIEW</span>
+          EXECUTIVE <span className="text-emerald-500 italic opacity-90">OVERVIEW</span>
         </h1>
-        <p className="mt-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.6em]">ACTIVE MARKET: <span className="text-emerald-400 italic">{market}</span></p>
+        <p className="mt-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.6em]">ACTIVE THEATER: <span className="text-emerald-400 italic">{market}</span></p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -103,7 +112,7 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({ leads, market, on
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
          <div className="lg:col-span-2 bg-[#0b1021] border-2 border-slate-800 rounded-[48px] p-10 shadow-2xl flex flex-col">
-            <h3 className="text-[11px] font-black text-white uppercase tracking-[0.3em] mb-8 flex items-center gap-4">
+            <h3 className="text-[11px] font-black text-white uppercase tracking-widest mb-8 flex items-center gap-4">
                <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.6)]"></div>
                LIVE OPERATIONAL FEED
             </h3>

@@ -78,7 +78,8 @@ export default function MediaVault() {
       {Object.keys(grouped).length === 0 ? (
         <div style={{ opacity: 0.7 }}>No assets yet.</div>
       ) : (
-        Object.entries(grouped).map(([type, list]) => (
+        // Comment: Fixed "Property 'map' does not exist on type 'unknown'" by explicitly casting Object.entries to the known internal schema
+        (Object.entries(grouped) as [string, AssetRecord[]][]).map(([type, list]) => (
           <div key={type} style={{ marginBottom: 18 }}>
             <h3 style={{ margin: '10px 0' }}>{type}</h3>
             <div style={{ display: 'grid', gap: 10 }}>
